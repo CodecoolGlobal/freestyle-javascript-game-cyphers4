@@ -24,14 +24,14 @@
     </div>
 
     <script>
-        var hero = {
+        let hero = {
             left: 575,
             top: 700
         };
 
-        var missiles = [];
+        let missiles = [];
 
-        var enemies = [
+        let enemies = [
             { left: 200, top: 100 },
             { left: 300, top: 100 },
             { left: 400, top: 100 },
@@ -50,26 +50,54 @@
             { left: 900, top: 175 }
         ];
 
+        let move_left = false;
+        let move_right = false;
+
+        setInterval(function (){
+            if (move_left) hero.left = hero.left - 1;
+            if (move_right) hero.left = hero.left + 1;
+            drawHero();
+        }, 1);
 
         document.onkeydown = function(e) {
-            if (e.keyCode === 37) {
-                // Left
-                hero.left = hero.left - 10;
+            e = e || window.event;
+            switch(e.which || e.keyCode) {
+                case 37: // left
+                    move_left = true;
+                    break;
+                case 39: // right
+                    move_right = true;
+                    break;
+                case 32:
+                    missiles.push({
+                            left: hero.left + 20,
+                            top: hero.top - 20
+                    });
+                    drawMissiles();
+                    break;
+                default: return; // exit this handler for other keys
             }
-            if (e.keyCode === 39) {
-                // Right
-                hero.left = hero.left + 10;
-            }
-            if (e.keyCode === 32) {
-                // Spacebar (fire)
-                missiles.push({
-                    left: hero.left + 20,
-                    top: hero.top - 20
-                });
-                drawMissiles()
-            }
-            drawHero();
+            e.preventDefault(); // prevent the default action (scroll / move caret)
         };
+
+        document.onkeyup = function(e) {
+            e = e || window.event;
+            switch(e.which || e.keyCode) {
+                case 37: // left
+                    move_left = false;
+                    break;
+                case 38: // up
+                    move_up = false;
+                    break;
+                case 39: // right
+                    move_right = false;
+                    break;
+                case 40: // down
+                    move_down = false;
+                    break;
+	        }
+        };
+
 
 
         function drawHero() {
@@ -79,33 +107,33 @@
 
         function drawMissiles() {
             document.getElementById('missiles').innerHTML = "";
-            for(var i = 0 ; i < missiles.length ; i++ ) {
+            for(let i = 0 ; i < missiles.length ; i++ ) {
                 document.getElementById('missiles').innerHTML += `<div class='missile1' style='left:${missiles[i].left}px; top:${missiles[i].top}px'></div>`;
             }
         }
 
         function moveMissiles() {
-            for(var i = 0 ; i < missiles.length ; i++ ) {
+            for(let i = 0 ; i < missiles.length ; i++ ) {
                 missiles[i].top = missiles[i].top - 8;
             }
         }
 
         function drawEnemies() {
             document.getElementById('enemies').innerHTML = "";
-            for(var i = 0 ; i < enemies.length ; i++ ) {
+            for(let i = 0 ; i < enemies.length ; i++ ) {
                 document.getElementById('enemies').innerHTML += `<div class='enemy' style='left:${enemies[i].left}px; top:${enemies[i].top}px'></div>`;
             }
         }
 
         function moveEnemies() {
-            for(var i = 0 ; i < enemies.length ; i++ ) {
+            for(let i = 0 ; i < enemies.length ; i++ ) {
                 enemies[i].top = enemies[i].top + 1;
             }
         }
 
         function collisionDetection() {
-            for (var enemy = 0; enemy < enemies.length; enemy++) {
-                for (var missile = 0; missile < missiles.length; missile++) {
+            for (let enemy = 0; enemy < enemies.length; enemy++) {
+                for (let missile = 0; missile < missiles.length; missile++) {
                     if (
                         missiles[missile].left >= enemies[enemy].left  &&
                         missiles[missile].left <= (enemies[enemy].left + 50)  &&
@@ -120,7 +148,7 @@
         }
 
         function gameLoop() {
-            setTimeout(gameLoop, 1000);
+            setTimeout(gameLoop, 25);
             moveMissiles();
             drawMissiles();
             moveEnemies();
