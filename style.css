@@ -1,4 +1,5 @@
 div#background {
+    display: block;
     width: 1200px;
     height: 800px;
     background-image: url('assets/background.png');
@@ -38,4 +39,45 @@ div.enemy {
     height: 50px;
     background-image: url('assets/enemy.png');
     position: absolute;
+}
+
+div#score {
+    color: white;
+    font-size: 50px;
+    position: absolute;
+    z-index: 3;
+    left: 575px;
+}
+
+div#menu {
+    text-align: center;
+    width: 300px;
+    height: 200px;
+    background-color: cadetblue;
+    display: block;
+    position: absolute;
+    top: 200px;
+    left: 500px;
+    border-radius: 20px;
+}
+
+button {
+    top: 200px;
+    width: 100px;
+    height: 50px;
+    margin-top: 30px;
+    background-color: darkcyan;
+    border-radius: 20px;
+}
+
+div#pause-menu {
+    text-align: center;
+    width: 300px;
+    height: 200px;
+    background-color: cadetblue;
+    display: none;
+    position: absolute;
+    top: 200px;
+    left: 500px;
+    border-radius: 20px;
 }

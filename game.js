@@ -1,8 +1,5 @@
-let timeCounter = 0;
-
-setInterval(function () {
-    timeCounter += 1;
-}, 1000);
+let score = 0;
+let pause = true;
 
 let hero = {
     left: 575,
@@ -10,23 +7,23 @@ let hero = {
 };
 
 const arrayOfEnemies = [
-            {left: 200, top: 100},
-            {left: 300, top: 100},
-            {left: 400, top: 100},
-            {left: 500, top: 100},
-            {left: 600, top: 100},
-            {left: 700, top: 100},
-            {left: 800, top: 100},
-            {left: 900, top: 100},
-            {left: 200, top: 175},
-            {left: 300, top: 175},
-            {left: 400, top: 175},
-            {left: 500, top: 175},
-            {left: 600, top: 175},
-            {left: 700, top: 175},
-            {left: 800, top: 175},
-            {left: 900, top: 175}
-        ];
+    {left: 200, top: 100},
+    {left: 300, top: 100},
+    {left: 400, top: 100},
+    {left: 500, top: 100},
+    {left: 600, top: 100},
+    {left: 700, top: 100},
+    {left: 800, top: 100},
+    {left: 900, top: 100},
+    {left: 200, top: 175},
+    {left: 300, top: 175},
+    {left: 400, top: 175},
+    {left: 500, top: 175},
+    {left: 600, top: 175},
+    {left: 700, top: 175},
+    {left: 800, top: 175},
+    {left: 900, top: 175}
+];
 
 
 let missiles = [];
@@ -34,24 +31,24 @@ let enemies = [];
 
 
 function generateMoreEnemies() {
-    let arrayOfEnemiesCopy = Object.assign([],[
-            {left: 200, top: 100},
-            {left: 300, top: 100},
-            {left: 400, top: 100},
-            {left: 500, top: 100},
-            {left: 600, top: 100},
-            {left: 700, top: 100},
-            {left: 800, top: 100},
-            {left: 900, top: 100},
-            {left: 200, top: 175},
-            {left: 300, top: 175},
-            {left: 400, top: 175},
-            {left: 500, top: 175},
-            {left: 600, top: 175},
-            {left: 700, top: 175},
-            {left: 800, top: 175},
-            {left: 900, top: 175}
-        ]);
+    let arrayOfEnemiesCopy = Object.assign([], [
+        {left: 200, top: 100},
+        {left: 300, top: 100},
+        {left: 400, top: 100},
+        {left: 500, top: 100},
+        {left: 600, top: 100},
+        {left: 700, top: 100},
+        {left: 800, top: 100},
+        {left: 900, top: 100},
+        {left: 200, top: 175},
+        {left: 300, top: 175},
+        {left: 400, top: 175},
+        {left: 500, top: 175},
+        {left: 600, top: 175},
+        {left: 700, top: 175},
+        {left: 800, top: 175},
+        {left: 900, top: 175}
+    ]);
     enemies.push(...arrayOfEnemiesCopy);
 }
 
@@ -66,6 +63,19 @@ setInterval(function () {
     drawHero();
 }, 1);
 
+let exitButton = document.getElementById('exit');
+exitButton.addEventListener('click', function () {
+    pause = false;
+    gameLoop();
+    document.getElementById('pause-menu').style.display = 'none';
+});
+
+let startButton = document.getElementById('start');
+startButton.addEventListener('click', function () {
+    pause = false;
+    gameLoop();
+    document.getElementById('menu').style.display = 'none';
+});
 
 document.onkeydown = function (e) {
     e = e || window.event;
@@ -84,6 +94,10 @@ document.onkeydown = function (e) {
                 });
             }
             drawMissiles();
+            break;
+        case 80:
+            document.getElementById('pause-menu').style.display = 'block';
+            pause = true;
             break;
         default:
             return; // exit this handler for other keys
@@ -151,9 +165,15 @@ function collisionDetection() {
             ) {
                 enemies.splice(enemy, 1);
                 missiles.splice(missile, 1);
+                score += 1;
+                printScore();
             }
         }
     }
+}
+
+function printScore() {
+    document.getElementById('score').innerText = score;
 }
 
 function outOfBoundsDetectionEnemy() {
@@ -165,6 +185,7 @@ function outOfBoundsDetectionEnemy() {
         }
     }
 }
+
 
 function outOfBoundsDetectionMissile() {
     for (let missile = 0; missile < missiles.length; missile++) {
@@ -183,15 +204,18 @@ function gameLoop() {
     if (turnCounter % 200 === 0) {
         generateMoreEnemies();
     }
-    setTimeout(gameLoop, 25);
-    moveMissiles();
-    drawMissiles();
-    moveEnemies();
-    drawEnemies();
-    collisionDetection();
-    outOfBoundsDetectionEnemy();
-    outOfBoundsDetectionMissile();
-    turnCounter += 1;
+    printScore();
+    if (pause !== true) {
+        setTimeout(gameLoop, 25);
+        moveMissiles();
+        drawMissiles();
+        moveEnemies();
+        drawEnemies();
+        collisionDetection();
+        outOfBoundsDetectionEnemy();
+        outOfBoundsDetectionMissile();
+        turnCounter += 1;
+    }
 }
 
 
