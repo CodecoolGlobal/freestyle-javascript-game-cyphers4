@@ -77,10 +77,12 @@ document.onkeydown = function (e) {
             move_right = true;
             break;
         case 32:
-            missiles.push({
-                left: hero.left + 20,
-                top: hero.top - 20
-            });
+            if (missiles.length < 10) {
+                missiles.push({
+                    left: hero.left + 20,
+                    top: hero.top - 20
+                });
+            }
             drawMissiles();
             break;
         default:
@@ -154,6 +156,27 @@ function collisionDetection() {
     }
 }
 
+function outOfBoundsDetectionEnemy() {
+    for (let enemy = 0; enemy < enemies.length; enemy++) {
+        if (
+            enemies[enemy].top >= 700
+        ) {
+            enemies.splice(enemy, 1);
+        }
+    }
+}
+
+function outOfBoundsDetectionMissile() {
+    for (let missile = 0; missile < missiles.length; missile++) {
+        if (
+            missiles[missile].top <= 10
+        ) {
+            missiles.splice(missile, 1);
+        }
+    }
+}
+
+
 let turnCounter = 0;
 
 function gameLoop() {
@@ -166,6 +189,8 @@ function gameLoop() {
     moveEnemies();
     drawEnemies();
     collisionDetection();
+    outOfBoundsDetectionEnemy();
+    outOfBoundsDetectionMissile();
     turnCounter += 1;
 }
 
