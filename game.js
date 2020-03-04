@@ -1,45 +1,71 @@
-initGame();
+let timeCounter = 0;
 
-function initGame() {
-
-    // Your game can start here, but define separate functions, don't write everything in here :)
-
-}
+setInterval(function () {
+    timeCounter += 1;
+}, 1000);
 
 let hero = {
     left: 575,
     top: 700
 };
 
-let missiles = [];
+const arrayOfEnemies = [
+            {left: 200, top: 100},
+            {left: 300, top: 100},
+            {left: 400, top: 100},
+            {left: 500, top: 100},
+            {left: 600, top: 100},
+            {left: 700, top: 100},
+            {left: 800, top: 100},
+            {left: 900, top: 100},
+            {left: 200, top: 175},
+            {left: 300, top: 175},
+            {left: 400, top: 175},
+            {left: 500, top: 175},
+            {left: 600, top: 175},
+            {left: 700, top: 175},
+            {left: 800, top: 175},
+            {left: 900, top: 175}
+        ];
 
-let enemies = [
-    {left: 200, top: 100},
-    {left: 300, top: 100},
-    {left: 400, top: 100},
-    {left: 500, top: 100},
-    {left: 600, top: 100},
-    {left: 700, top: 100},
-    {left: 800, top: 100},
-    {left: 900, top: 100},
-    {left: 200, top: 175},
-    {left: 300, top: 175},
-    {left: 400, top: 175},
-    {left: 500, top: 175},
-    {left: 600, top: 175},
-    {left: 700, top: 175},
-    {left: 800, top: 175},
-    {left: 900, top: 175}
-];
+
+let missiles = [];
+let enemies = [];
+
+
+function generateMoreEnemies() {
+    let arrayOfEnemiesCopy = Object.assign([],[
+            {left: 200, top: 100},
+            {left: 300, top: 100},
+            {left: 400, top: 100},
+            {left: 500, top: 100},
+            {left: 600, top: 100},
+            {left: 700, top: 100},
+            {left: 800, top: 100},
+            {left: 900, top: 100},
+            {left: 200, top: 175},
+            {left: 300, top: 175},
+            {left: 400, top: 175},
+            {left: 500, top: 175},
+            {left: 600, top: 175},
+            {left: 700, top: 175},
+            {left: 800, top: 175},
+            {left: 900, top: 175}
+        ]);
+    enemies.push(...arrayOfEnemiesCopy);
+}
+
 
 let move_left = false;
 let move_right = false;
+
 
 setInterval(function () {
     if (move_left) hero.left = hero.left - 1;
     if (move_right) hero.left = hero.left + 1;
     drawHero();
 }, 1);
+
 
 document.onkeydown = function (e) {
     e = e || window.event;
@@ -69,14 +95,8 @@ document.onkeyup = function (e) {
         case 37: // left
             move_left = false;
             break;
-        case 38: // up
-            move_up = false;
-            break;
         case 39: // right
             move_right = false;
-            break;
-        case 40: // down
-            move_down = false;
             break;
     }
 };
@@ -87,6 +107,7 @@ function drawHero() {
     document.getElementById('hero').style.top = hero.top + 'px';
 }
 
+
 function drawMissiles() {
     document.getElementById('missiles').innerHTML = "";
     for (let i = 0; i < missiles.length; i++) {
@@ -94,11 +115,13 @@ function drawMissiles() {
     }
 }
 
+
 function moveMissiles() {
     for (let i = 0; i < missiles.length; i++) {
         missiles[i].top = missiles[i].top - 8;
     }
 }
+
 
 function drawEnemies() {
     document.getElementById('enemies').innerHTML = "";
@@ -107,11 +130,13 @@ function drawEnemies() {
     }
 }
 
+
 function moveEnemies() {
     for (let i = 0; i < enemies.length; i++) {
         enemies[i].top = enemies[i].top + 1;
     }
 }
+
 
 function collisionDetection() {
     for (let enemy = 0; enemy < enemies.length; enemy++) {
@@ -129,13 +154,20 @@ function collisionDetection() {
     }
 }
 
+let turnCounter = 0;
+
 function gameLoop() {
+    if (turnCounter % 200 === 0) {
+        generateMoreEnemies();
+    }
     setTimeout(gameLoop, 25);
     moveMissiles();
     drawMissiles();
     moveEnemies();
     drawEnemies();
     collisionDetection();
+    turnCounter += 1;
 }
+
 
 gameLoop();
