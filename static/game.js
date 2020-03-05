@@ -204,7 +204,6 @@ function gameLoop() {
         moveEnemies();
         drawEnemies();
         collisionDetection();
-        outOfBoundsDetectionEnemy();
         outOfBoundsDetectionMissile();
         turnCounter += 1;
     }
