@@ -12,10 +12,8 @@ def main():
 
 @app.route("/showscores", methods=['GET', 'POST'])
 def get_scores():
-    if request.method == 'POST':
-        username = request.form['username']
-        score = request.form['score']
-        datamanager.write_score(username, score)
+    data = request.get_json()
+    datamanager.write_score(data['username'], data['score'])
     return jsonify(datamanager.get_scores())
 
 

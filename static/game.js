@@ -140,7 +140,16 @@ function moveEnemies() {
             life();
             if (checkGameOver()) {
                 alert("Game Over");
-                fetchScores();
+                hero.display = 'none';
+                let missile = document.querySelectorAll('enemy');
+                let enemy = document.querySelectorAll('missile1');
+                for (let element of enemy) {
+                    element.display = 'none'
+                }
+                for (let element of missile) {
+                    element.display = 'none'
+                }
+                fetchscores('Cory', 3);
             }
         } else {
             enemies[enemy].top = enemies[enemy].top + 1;
@@ -219,10 +228,10 @@ function gameLoop() {
     }
 }
 
-
 gameLoop();
 
-function fetchScores(username, score) {
+
+function fetchscores(username, score) {
     fetch('http://0.0.0.0:8000/showscores', {
         method: 'post',
         headers: {
