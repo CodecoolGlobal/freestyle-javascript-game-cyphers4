@@ -54,30 +54,32 @@ function buttonHandler(button, menuType) {
 
 document.onkeydown = function (e) {
     e = e || window.event;
-    switch (e.which || e.keyCode) {
-        case 37: // left
-            move_left = true;
-            break;
-        case 39: // right
-            move_right = true;
-            break;
-        case 32:
-            if (missiles.length < 10) {
-                missiles.push({
-                    left: hero.left + 20,
-                    top: hero.top - 20
-                });
-            }
-            drawMissiles();
-            break;
-        case 80:
-            document.getElementById('pause-menu').style.display = 'block';
-            pause = true;
-            break;
-        default:
-            return; // exit this handler for other keys
+    if (pause !== true) {
+        switch (e.which || e.keyCode) {
+            case 37: // left
+                move_left = true;
+                break;
+            case 39: // right
+                move_right = true;
+                break;
+            case 32:
+                if (missiles.length < 10) {
+                    missiles.push({
+                        left: hero.left + 20,
+                        top: hero.top - 20
+                    });
+                }
+                drawMissiles();
+                break;
+            case 80:
+                document.getElementById('pause-menu').style.display = 'block';
+                pause = true;
+                break;
+            default:
+                return; // exit this handler for other keys
+        }
+        e.preventDefault(); // prevent the default action (scroll / move caret)
     }
-    e.preventDefault(); // prevent the default action (scroll / move caret)
 };
 
 
@@ -138,7 +140,7 @@ function moveEnemies() {
             life();
             if (checkGameOver()) {
                 alert("Game Over");
-                fetchscores();
+                fetchScores();
             }
         } else {
             enemies[enemy].top = enemies[enemy].top + 1;
@@ -212,9 +214,7 @@ function gameLoop() {
 
 gameLoop();
 
-document.querySelector('mybtn').addEventListener('click', fetchscores);
-
-function fetchscores(username, score) {
+function fetchScores(username, score) {
     fetch('http://0.0.0.0:8000/showscores', {
         method: 'post',
         headers: {
