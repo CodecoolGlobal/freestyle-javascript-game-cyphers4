@@ -7,10 +7,21 @@
 </head>
 <body>
     <div id="background">
+<!--        <button id="menu-button">Menu</button>-->
+        <div id="score"></div>
         <div id="hero"></div>
         <div id="missiles"></div>
         <div id="enemies"></div>
     </div>
-    <script src="{{ url_for('static', filename='game.js') }}"></script>
+    <div id="pause-menu">
+        <h1>Pause menu</h1>
+        <button id="exit">Resume</button>
+    </div>
+    <div id="menu">
+        <h1>Let's start!</h1>
+        <button id="start">Start</button>
+    </div>
+
+     <script src="{{ url_for('static', filename='game.js') }}"></script>
 </body>
 </html>

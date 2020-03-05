@@ -1,4 +1,12 @@
+body {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    background-color: black;
+}
+
 div#background {
+    margin-left: calc(50vw - 600px);
+    margin-right: calc(50vw - 600px);
+    display: block;
     width: 1200px;
     height: 800px;
     background-image: url('assets/background.png');
@@ -40,11 +48,48 @@ div.enemy {
     position: absolute;
 }
 
-.mybtn {
-    width: 50px;
-    height: 50px;
+div#score {
+    color: white;
+    font-size: 50px;
     position: absolute;
-    background: #9C1A1C;
-    top: 900px;
-    left: 300px
+    z-index: 3;
+    left: 575px;
+}
+
+div#menu {
+    text-align: center;
+    width: 20%;
+    height: 200px;
+    background-color: cadetblue;
+    display: block;
+    position: absolute;
+    top: 200px;
+    left: 40%;
+    border-radius: 8px;
+}
+
+button {
+    top: 200px;
+    width: 100px;
+    height: 50px;
+    margin-top: 30px;
+    background-color: #007f8b;
+    border: 2px solid black;
+    border-radius: 20px;
+}
+
+button:hover {
+    background-color: #00748b;
+}
+
+div#pause-menu {
+    text-align: center;
+    width: 20%;
+    height: 200px;
+    background-color: cadetblue;
+    display: none;
+    position: absolute;
+    top: 200px;
+    left: 40%;
+    border-radius: 8px;
 }

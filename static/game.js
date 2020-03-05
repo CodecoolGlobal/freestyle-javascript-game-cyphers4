@@ -1,56 +1,33 @@
+let score = 0;
+let pause = true;
+const arrayOfEnemies = [];
+let missiles = [];
+let enemies = [];
+
+
 let hero = {
     left: 575,
     top: 700,
     "hp": 3
 };
 
-const arrayOfEnemies = [
-    {left: 200, top: 100},
-    {left: 300, top: 100},
-    {left: 400, top: 100},
-    {left: 500, top: 100},
-    {left: 600, top: 100},
-    {left: 700, top: 100},
-    {left: 800, top: 100},
-    {left: 900, top: 100},
-    {left: 200, top: 175},
-    {left: 300, top: 175},
-    {left: 400, top: 175},
-    {left: 500, top: 175},
-    {left: 600, top: 175},
-    {left: 700, top: 175},
-    {left: 800, top: 175},
-    {left: 900, top: 175}
-];
 
-
-let missiles = [];
-let enemies = [];
+function createEnemies(array) {
+    for (let i = 200; i <= 900; i += 100) {
+        array.push({left: i, top: 100});
+        array.push({left: i, top: 175})
+    }
+}
 
 
 function generateMoreEnemies() {
-    let arrayOfEnemiesCopy = Object.assign([], [
-        {left: 200, top: 100},
-        {left: 300, top: 100},
-        {left: 400, top: 100},
-        {left: 500, top: 100},
-        {left: 600, top: 100},
-        {left: 700, top: 100},
-        {left: 800, top: 100},
-        {left: 900, top: 100},
-        {left: 200, top: 175},
-        {left: 300, top: 175},
-        {left: 400, top: 175},
-        {left: 500, top: 175},
-        {left: 600, top: 175},
-        {left: 700, top: 175},
-        {left: 800, top: 175},
-        {left: 900, top: 175}
-    ]);
+    let arrayOfEnemiesCopy = Object.assign([], []);
+    createEnemies(arrayOfEnemiesCopy);
     enemies.push(...arrayOfEnemiesCopy);
 }
 
 
+createEnemies(arrayOfEnemies);
 let move_left = false;
 let move_right = false;
 
@@ -60,6 +37,19 @@ setInterval(function () {
     if (move_right) hero.left = hero.left + 1;
     drawHero();
 }, 1);
+
+
+buttonHandler(document.getElementById('exit'), 'pause-menu');
+buttonHandler(document.getElementById('start'), 'menu');
+
+
+function buttonHandler(button, menuType) {
+    button.addEventListener('click', function () {
+        pause = false;
+        gameLoop();
+        document.getElementById(`${menuType}`).style.display = 'none';
+    });
+}
 
 
 document.onkeydown = function (e) {
@@ -80,11 +70,16 @@ document.onkeydown = function (e) {
             }
             drawMissiles();
             break;
+        case 80:
+            document.getElementById('pause-menu').style.display = 'block';
+            pause = true;
+            break;
         default:
             return; // exit this handler for other keys
     }
     e.preventDefault(); // prevent the default action (scroll / move caret)
 };
+
 
 document.onkeyup = function (e) {
     e = e || window.event;
@@ -102,6 +97,11 @@ document.onkeyup = function (e) {
 function drawHero() {
     document.getElementById('hero').style.left = hero.left + 'px';
     document.getElementById('hero').style.top = hero.top + 'px';
+    if (hero.left > 1150) {
+        hero.left--;
+    } else if (hero.left < 0) {
+        hero.left++;
+    }
 }
 
 
@@ -157,9 +157,15 @@ function collisionDetection() {
             ) {
                 enemies.splice(enemy, 1);
                 missiles.splice(missile, 1);
+                score += 1;
+                printScore();
             }
         }
     }
+}
+
+function printScore() {
+    document.getElementById('score').innerText = score;
 }
 
 function life() {
@@ -171,22 +177,37 @@ function checkGameOver() {
 }
 
 
+function outOfBoundsDetectionMissile() {
+    for (let missile = 0; missile < missiles.length; missile++) {
+        if (
+            missiles[missile].top <= 10
+        ) {
+            missiles.splice(missile, 1);
+        }
+    }
+}
+
+
 let turnCounter = 0;
 let enemy_spawn_rate = 200;
 let enemy_spawn_rate_dif = 0;
 
 function gameLoop() {
-    if (turnCounter % enemy_spawn_rate === 0) {
-        enemy_spawn_rate -= enemy_spawn_rate_dif;
-        generateMoreEnemies();
+    if (pause !== true) {
+        if (turnCounter % 300 === 0) {
+            generateMoreEnemies();
+        }
+        printScore();
+        setTimeout(gameLoop, 25 - (turnCounter / 300));
+        moveMissiles();
+        drawMissiles();
+        moveEnemies();
+        drawEnemies();
+        collisionDetection();
+        outOfBoundsDetectionEnemy();
+        outOfBoundsDetectionMissile();
+        turnCounter += 1;
     }
-    setTimeout(gameLoop, 25);
-    moveMissiles();
-    drawMissiles();
-    moveEnemies();
-    drawEnemies();
-    collisionDetection();
-    turnCounter += 1;
 }
 
 
