@@ -1,58 +1,32 @@
 let score = 0;
 let pause = true;
+const arrayOfEnemies = [];
+let missiles = [];
+let enemies = [];
+
 
 let hero = {
     left: 575,
     top: 700
 };
 
-const arrayOfEnemies = [
-    {left: 200, top: 100},
-    {left: 300, top: 100},
-    {left: 400, top: 100},
-    {left: 500, top: 100},
-    {left: 600, top: 100},
-    {left: 700, top: 100},
-    {left: 800, top: 100},
-    {left: 900, top: 100},
-    {left: 200, top: 175},
-    {left: 300, top: 175},
-    {left: 400, top: 175},
-    {left: 500, top: 175},
-    {left: 600, top: 175},
-    {left: 700, top: 175},
-    {left: 800, top: 175},
-    {left: 900, top: 175}
-];
 
-
-let missiles = [];
-let enemies = [];
+function createEnemies(array) {
+    for (let i = 200; i <= 900; i += 100) {
+        array.push({left: i, top: 100});
+        array.push({left: i, top: 175})
+    }
+}
 
 
 function generateMoreEnemies() {
-    let arrayOfEnemiesCopy = Object.assign([], [
-        {left: 200, top: 100},
-        {left: 300, top: 100},
-        {left: 400, top: 100},
-        {left: 500, top: 100},
-        {left: 600, top: 100},
-        {left: 700, top: 100},
-        {left: 800, top: 100},
-        {left: 900, top: 100},
-        {left: 200, top: 175},
-        {left: 300, top: 175},
-        {left: 400, top: 175},
-        {left: 500, top: 175},
-        {left: 600, top: 175},
-        {left: 700, top: 175},
-        {left: 800, top: 175},
-        {left: 900, top: 175}
-    ]);
+    let arrayOfEnemiesCopy = Object.assign([], []);
+    createEnemies(arrayOfEnemiesCopy);
     enemies.push(...arrayOfEnemiesCopy);
 }
 
 
+createEnemies(arrayOfEnemies);
 let move_left = false;
 let move_right = false;
 
@@ -63,19 +37,19 @@ setInterval(function () {
     drawHero();
 }, 1);
 
-let exitButton = document.getElementById('exit');
-exitButton.addEventListener('click', function () {
-    pause = false;
-    gameLoop();
-    document.getElementById('pause-menu').style.display = 'none';
-});
 
-let startButton = document.getElementById('start');
-startButton.addEventListener('click', function () {
-    pause = false;
-    gameLoop();
-    document.getElementById('menu').style.display = 'none';
-});
+buttonHandler(document.getElementById('exit'), 'pause-menu');
+buttonHandler(document.getElementById('start'), 'menu');
+
+
+function buttonHandler(button, menuType) {
+    button.addEventListener('click', function () {
+        pause = false;
+        gameLoop();
+        document.getElementById(`${menuType}`).style.display = 'none';
+    });
+}
+
 
 document.onkeydown = function (e) {
     e = e || window.event;
@@ -105,6 +79,7 @@ document.onkeydown = function (e) {
     e.preventDefault(); // prevent the default action (scroll / move caret)
 };
 
+
 document.onkeyup = function (e) {
     e = e || window.event;
     switch (e.which || e.keyCode) {
@@ -121,6 +96,11 @@ document.onkeyup = function (e) {
 function drawHero() {
     document.getElementById('hero').style.left = hero.left + 'px';
     document.getElementById('hero').style.top = hero.top + 'px';
+    if (hero.left > 1150) {
+        hero.left--;
+    } else if (hero.left < 0) {
+        hero.left++;
+    }
 }
 
 
@@ -201,11 +181,11 @@ function outOfBoundsDetectionMissile() {
 let turnCounter = 0;
 
 function gameLoop() {
-    if (turnCounter % 200 === 0) {
-        generateMoreEnemies();
-    }
-    printScore();
     if (pause !== true) {
+        if (turnCounter % 300 === 0) {
+            generateMoreEnemies();
+        }
+        printScore();
         setTimeout(gameLoop, 25);
         moveMissiles();
         drawMissiles();
