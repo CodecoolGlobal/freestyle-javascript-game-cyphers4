@@ -54,30 +54,32 @@ function buttonHandler(button, menuType) {
 
 document.onkeydown = function (e) {
     e = e || window.event;
-    switch (e.which || e.keyCode) {
-        case 37: // left
-            move_left = true;
-            break;
-        case 39: // right
-            move_right = true;
-            break;
-        case 32:
-            if (missiles.length < 10) {
-                missiles.push({
-                    left: hero.left + 20,
-                    top: hero.top - 20
-                });
-            }
-            drawMissiles();
-            break;
-        case 80:
-            document.getElementById('pause-menu').style.display = 'block';
-            pause = true;
-            break;
-        default:
-            return; // exit this handler for other keys
+    if (pause !== true) {
+        switch (e.which || e.keyCode) {
+            case 37: // left
+                move_left = true;
+                break;
+            case 39: // right
+                move_right = true;
+                break;
+            case 32:
+                if (missiles.length < 10) {
+                    missiles.push({
+                        left: hero.left + 20,
+                        top: hero.top - 20
+                    });
+                }
+                drawMissiles();
+                break;
+            case 80:
+                document.getElementById('pause-menu').style.display = 'block';
+                pause = true;
+                break;
+            default:
+                return; // exit this handler for other keys
+        }
+        e.preventDefault(); // prevent the default action (scroll / move caret)
     }
-    e.preventDefault(); // prevent the default action (scroll / move caret)
 };
 
 
@@ -177,6 +179,13 @@ function printScore() {
     document.getElementById('score').innerText = score;
 }
 
+function printHealth() {
+    document.getElementById('hearts').innerHTML = "";
+    for (let i = 0; i < hero.hp; i++) {
+        document.getElementById('hearts').innerHTML += `<div class='hp' style='left:${i * 50}px; top:5px'></div>`;
+    }
+}
+
 function life() {
     hero.hp -= 1;
 }
@@ -206,6 +215,7 @@ function gameLoop() {
         if (turnCounter % 300 === 0) {
             generateMoreEnemies();
         }
+        printHealth();
         printScore();
         setTimeout(gameLoop, 25 - (turnCounter / 300));
         moveMissiles();
@@ -219,6 +229,7 @@ function gameLoop() {
 }
 
 gameLoop();
+
 
 function fetchscores(username, score) {
     fetch('http://0.0.0.0:8000/showscores', {
