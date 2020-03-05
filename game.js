@@ -186,7 +186,7 @@ function gameLoop() {
             generateMoreEnemies();
         }
         printScore();
-        setTimeout(gameLoop, 25);
+        setTimeout(gameLoop, 25 - (turnCounter / 300));
         moveMissiles();
         drawMissiles();
         moveEnemies();
