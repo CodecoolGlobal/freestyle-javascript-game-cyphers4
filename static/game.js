@@ -7,7 +7,8 @@ let enemies = [];
 
 let hero = {
     left: 575,
-    top: 700
+    top: 700,
+    "hp": 3
 };
 
 
@@ -113,11 +114,14 @@ function drawMissiles() {
 
 
 function moveMissiles() {
-    for (let i = 0; i < missiles.length; i++) {
-        missiles[i].top = missiles[i].top - 8;
+    for (let missile = 0; missile < missiles.length; missile++) {
+        if (missiles[missile].top <= 10) {
+            missiles.splice(missile, 1);
+        } else {
+            missiles[missile].top = missiles[missile].top - 8;
+        }
     }
 }
-
 
 function drawEnemies() {
     document.getElementById('enemies').innerHTML = "";
@@ -128,11 +132,19 @@ function drawEnemies() {
 
 
 function moveEnemies() {
-    for (let i = 0; i < enemies.length; i++) {
-        enemies[i].top = enemies[i].top + 1;
+    for (let enemy = 0; enemy < enemies.length; enemy++) {
+        if (enemies[enemy].top >= 700) {
+            enemies.splice(enemy, 1);
+            life();
+            if (checkGameOver()) {
+                alert("Game Over");
+                fetchscores();
+            }
+        } else {
+            enemies[enemy].top = enemies[enemy].top + 1;
+        }
     }
 }
-
 
 function collisionDetection() {
     for (let enemy = 0; enemy < enemies.length; enemy++) {
@@ -156,14 +168,12 @@ function printScore() {
     document.getElementById('score').innerText = score;
 }
 
-function outOfBoundsDetectionEnemy() {
-    for (let enemy = 0; enemy < enemies.length; enemy++) {
-        if (
-            enemies[enemy].top >= 700
-        ) {
-            enemies.splice(enemy, 1);
-        }
-    }
+function life() {
+    hero.hp -= 1;
+}
+
+function checkGameOver() {
+    return hero.hp === 0;
 }
 
 
@@ -179,6 +189,8 @@ function outOfBoundsDetectionMissile() {
 
 
 let turnCounter = 0;
+let enemy_spawn_rate = 200;
+let enemy_spawn_rate_dif = 0;
 
 function gameLoop() {
     if (pause !== true) {
@@ -192,7 +204,6 @@ function gameLoop() {
         moveEnemies();
         drawEnemies();
         collisionDetection();
-        outOfBoundsDetectionEnemy();
         outOfBoundsDetectionMissile();
         turnCounter += 1;
     }
@@ -200,3 +211,20 @@ function gameLoop() {
 
 
 gameLoop();
+
+document.querySelector('mybtn').addEventListener('click', fetchscores);
+
+function fetchscores(username, score) {
+    fetch('http://0.0.0.0:8000/showscores', {
+        method: 'post',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({username: username, score: score})
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            console.table(data);
+        })
+}
