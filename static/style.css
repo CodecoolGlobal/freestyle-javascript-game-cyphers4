@@ -1,6 +1,8 @@
 body {
     font-family: Verdana, Arial, Helvetica, sans-serif;
-    background-color: black;
+    height: 97vh;
+    background-color: #7E4497;
+    background-image: linear-gradient(#272562, #50337B, #7E4497); /* Standard syntax (must be last) */
 }
 
 div#background {
