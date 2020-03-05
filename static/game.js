@@ -1,8 +1,9 @@
 let score = 0;
 let pause = true;
-const arrayOfEnemies = [];
+let arrayOfEnemies = [];
 let missiles = [];
 let enemies = [];
+let table = document.getElementById('score-table');
 
 
 let hero = {
@@ -41,6 +42,38 @@ setInterval(function () {
 
 buttonHandler(document.getElementById('exit'), 'pause-menu');
 buttonHandler(document.getElementById('start'), 'menu');
+
+
+function submitHandler() {
+    let username = document.getElementById('username').value;
+    fetchscores(`${username}`, `${score}`);
+    document.getElementById('username').style.display = 'none';
+    document.getElementById('submit').style.display = 'none';
+    document.getElementById('score-table').style.display = 'table';
+}
+
+
+// document.getElementById('restart').addEventListener('click', function () {
+//     score = 0;
+//     document.getElementById('game-over').style.display = 'none';
+//     document.getElementById('score-table').style.display = 'none';
+//     document.getElementById('username').style.display = 'inline-block';
+//     document.getElementById('submit').style.display = 'inline-block';
+//     pause = false;
+//     score = 0;
+//     arrayOfEnemies = [];
+//     missiles = [];
+//     enemies = [];
+//     hero = {
+//         left: 575,
+//         top: 700,
+//         "hp": 3
+//     };
+//     for (let i = 1; i < 3; i++) {
+//         table.deleteRow(1);
+//     }
+//     gameLoop();
+// });
 
 
 function buttonHandler(button, menuType) {
@@ -139,17 +172,10 @@ function moveEnemies() {
             enemies.splice(enemy, 1);
             life();
             if (checkGameOver()) {
-                alert("Game Over");
-                hero.display = 'none';
-                let missile = document.querySelectorAll('enemy');
-                let enemy = document.querySelectorAll('missile1');
-                for (let element of enemy) {
-                    element.display = 'none'
-                }
-                for (let element of missile) {
-                    element.display = 'none'
-                }
-                fetchscores('Cory', 3);
+                document.getElementById('game-over').style.display = 'block';
+                document.getElementById('score-menu').innerText = score;
+                document.getElementById('submit').addEventListener('click', submitHandler);
+                pause = true;
             }
         } else {
             enemies[enemy].top = enemies[enemy].top + 1;
@@ -217,7 +243,7 @@ function gameLoop() {
         }
         printHealth();
         printScore();
-        setTimeout(gameLoop, 25 - (turnCounter / 300));
+        setTimeout(gameLoop, 0 - (turnCounter / 300));
         moveMissiles();
         drawMissiles();
         moveEnemies();
@@ -242,6 +268,13 @@ function fetchscores(username, score) {
     })
         .then((response) => response.json())
         .then((data) => {
-            console.table(data);
-        })
+                for (let i = 0; i < data.length; i++) {
+                    let row = table.insertRow(i + 1);
+                    let cell1 = row.insertCell(0);
+                    let cell2 = row.insertCell(1);
+                    cell1.innerText = data[i].username;
+                    cell2.innerText = data[i].score;
+                }
+            }
+        )
 }
