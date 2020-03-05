@@ -16,7 +16,9 @@ def db_mod_list_without_return(cursor: RealDictCursor, query, list_of_var):
 def get_scores():
     query = '''
     SELECT *
-    FROM scores'''
+    FROM scores
+    ORDER BY score DESC
+    LIMIT 10'''
     list_of_var = []
     return db_mod_list_with_return(query=query, list_of_var=list_of_var)
 
