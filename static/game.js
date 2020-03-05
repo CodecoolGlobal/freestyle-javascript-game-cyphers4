@@ -67,6 +67,7 @@ document.onkeydown = function (e) {
                     left: hero.left + 20,
                     top: hero.top - 20
                 });
+                play_fire_sound()
             }
             drawMissiles();
             break;
@@ -130,7 +131,6 @@ function drawEnemies() {
     }
 }
 
-
 function moveEnemies() {
     for (let enemy = 0; enemy < enemies.length; enemy++) {
         if (enemies[enemy].top >= 700) {
@@ -167,6 +167,7 @@ function collisionDetection() {
                 enemies.splice(enemy, 1);
                 missiles.splice(missile, 1);
                 score += 1;
+                play_hit_sound();
                 printScore();
             }
         }
@@ -196,10 +197,7 @@ function outOfBoundsDetectionMissile() {
     }
 }
 
-
 let turnCounter = 0;
-let enemy_spawn_rate = 200;
-let enemy_spawn_rate_dif = 0;
 
 function gameLoop() {
     if (pause !== true) {
@@ -233,4 +231,14 @@ function fetchscores(username, score) {
         .then((data) => {
             console.table(data);
         })
+}
+
+function play_fire_sound() {
+    let fire = new Audio("/static/fire.mp3");
+    fire.volume = 0.5;
+    fire.play();
+}
+
+function play_hit_sound() {
+    new Audio("static/exp.mp3").play();
 }
