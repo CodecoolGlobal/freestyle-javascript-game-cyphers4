@@ -170,6 +170,13 @@ function printScore() {
     document.getElementById('score').innerText = score;
 }
 
+function printHealth() {
+    document.getElementById('hearts').innerHTML = "";
+    for (let i = 0; i < hero.hp; i++) {
+        document.getElementById('hearts').innerHTML += `<div class='hp' style='left:${i * 50}px; top:5px'></div>`;
+    }
+}
+
 function life() {
     hero.hp -= 1;
 }
@@ -199,6 +206,7 @@ function gameLoop() {
         if (turnCounter % 300 === 0) {
             generateMoreEnemies();
         }
+        printHealth();
         printScore();
         setTimeout(gameLoop, 25 - (turnCounter / 300));
         moveMissiles();
