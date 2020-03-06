@@ -34,10 +34,10 @@ let move_right = false;
 
 
 setInterval(function () {
-    if (move_left) hero.left = hero.left - 1;
-    if (move_right) hero.left = hero.left + 1;
+    if (move_left) hero.left = hero.left - 2;
+    if (move_right) hero.left = hero.left + 2;
     drawHero();
-}, 1);
+}, 0);
 
 
 buttonHandler(document.getElementById('exit'), 'pause-menu');
@@ -53,27 +53,25 @@ function submitHandler() {
 }
 
 
-// document.getElementById('restart').addEventListener('click', function () {
-//     score = 0;
-//     document.getElementById('game-over').style.display = 'none';
-//     document.getElementById('score-table').style.display = 'none';
-//     document.getElementById('username').style.display = 'inline-block';
-//     document.getElementById('submit').style.display = 'inline-block';
-//     pause = false;
-//     score = 0;
-//     arrayOfEnemies = [];
-//     missiles = [];
-//     enemies = [];
-//     hero = {
-//         left: 575,
-//         top: 700,
-//         "hp": 3
-//     };
-//     for (let i = 1; i < 3; i++) {
-//         table.deleteRow(1);
-//     }
-//     gameLoop();
-// });
+document.getElementById('restart').addEventListener('click', function () {
+    score = 0;
+    document.getElementById('game-over').style.display = 'none';
+    document.getElementById('score-table').style.display = 'none';
+    document.getElementById('username').style.display = 'inline-block';
+    document.getElementById('submit').style.display = 'inline-block';
+    pause = false;
+    score = 0;
+    arrayOfEnemies = [];
+    missiles = [];
+    enemies = [];
+    hero = {
+        left: 575,
+        top: 700,
+        "hp": 3
+    };
+    table.innerText = "";
+    gameLoop();
+});
 
 
 function buttonHandler(button, menuType) {
@@ -241,7 +239,7 @@ function gameLoop() {
         }
         printHealth();
         printScore();
-        setTimeout(gameLoop, 0 - (turnCounter / 300));
+        setTimeout(gameLoop, 20 - (turnCounter / 300));
         moveMissiles();
         drawMissiles();
         moveEnemies();
@@ -266,6 +264,11 @@ function fetchscores(username, score) {
     })
         .then((response) => response.json())
         .then((data) => {
+            let row = table.insertRow();
+            let cell1 = row.insertCell(0);
+            let cell2 = row.insertCell(1);
+            cell1.innerText = "Username";
+            cell2.innerText = "Score";
             for (let i = 0; i < data.length; i++) {
                     let row = table.insertRow(i + 1);
                     let cell1 = row.insertCell(0);
@@ -278,7 +281,7 @@ function fetchscores(username, score) {
 
 function play_fire_sound() {
     let fire = new Audio("/static/fire.mp3");
-    fire.volume = 0.5;
+    fire.volume = 0.3;
     fire.play();
 }
 

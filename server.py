@@ -13,7 +13,6 @@ def main():
 @app.route("/showscores", methods=['GET', 'POST'])
 def get_scores():
     data = request.get_json()
-    print(data)
     datamanager.write_score(data['username'], data['score'])
     return jsonify(datamanager.get_scores())
 
